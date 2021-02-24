@@ -118,7 +118,8 @@ mash.add(mash2);
 mash.position.set(0, -25, 10);
 groupsn.add( mash );
 
-groupsn.position.set(xs+20, -2.0, zs+50);
+//groupsn.position.set(xs+20, -2.0, zs+50);
 //groupsn.position.set(83.7, -2.0, -162.2);
+groupsn.position.set(-9.33, -2.0, 1.0);
 
 scene.add( groupsn );
