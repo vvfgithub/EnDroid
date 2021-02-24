@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html> 	
+   <head>
+     <meta charset="utf-8"> 
+     <title>Снег</title> 	
+     <style> 
+       body { margin: 0; } 
+       canvas { display: block; }
+       p{  font-size : 30px; }  
+     </style>
+   </head> 
+   <body> 
+    <script src="./three.js"></script>
+    <script src="./OrbitControls.js"></script> 
+    <script src='./initview.js'></script>        
+    <script src='./house.js'></script>        
+    <script src='./letdom.js'></script>        
+    <script src='./sector.js'></script>        
+    <script src='./endroid.js'></script>        
+            
+    <div style="
+		position: absolute; 
+		bottom: 0; left: 40px;
+		font-size : 60px;
+		height: 80px;
+		">
+		<input type="button"
+	 	id="playButton"       	 
+	 	onclick="btStart()" 
+	 	value="▶️"
+	 	style="font-size : 60px; height: 80px;"       	 
+		>
+		
+		<input type="button"
+			 	id="Left"       	 
+			 	onclick="btLeft()" 
+			 	value="⬅️"
+			 	style="font-size : 60px; height: 80px;"       	 
+		>		
+     	<input type="range"  
+  		min="-1" max="1" 
+  		step="1" 
+  		id="r1" 
+  		value= "1"
+  		oninput="fun1()"
+  		style="font-size : 60px; width: 200px;"
+  		>
+  		<input type="button"
+  		id="Left"       	 
+  		onclick="btRight()" 
+  		value="➡️"
+  		style="font-size : 60px; height: 80px;"       	 
+  		>		  		  	
+    </div>
+    
+    <script> 	      
+       
+       var StartId=false;			
+       var alpha=0;
+       
+       function btStart() {
+       	if (StartId) {
+       	StartId = false;
+       	document.getElementById('playButton').value='▶️';      	
+/*      	
+      	console.log('xs=',groupsn.position.x);
+      	console.log('zs=',groupsn.position.z);       	      	
+    	
+    	console.log('x=',camera.position.x);
+    	console.log('y=',camera.position.y);
+    	console.log('z=',camera.position.z);       	      	    	
+*/    	
+       	}
+       	else {
+       	StartId = true;
+       	document.getElementById('playButton').value='⏸';
+       	}
+       } 
+       
+       function fun1() { 
+         var rng=document.getElementById('r1');                
+         return -rng.value;
+       }     
+                                                              
+       function btLeft() {
+       	 document.getElementById('r1').value='-1';                                                       
+       }
+       
+       function btRight() {
+        document.getElementById('r1').value='1';
+        }
+                                                              
+
+       function makeCube(geometry,material, x, y, z) {       		
+       const cube = new THREE.Mesh(geometry, material);
+       scene.add(cube);
+       cube.position.set(x, y, z);
+       return cube;
+       }   
+              
+       const vsnow=[];
+       
+       const InitSnow = function () {
+       const nsnow = 1000;
+       v=0.5;
+  //0xF0F8FF   
+       colorsnow = 0xFFFAFA;//44aa88; 
+       const geomsn = new THREE.BoxGeometry(v, v, v);      
+//       const matsn = new THREE.MeshPhongMaterial({emissive:colorsnow, emissiveIntensity:1});
+       const matsn = new THREE.MeshBasicMaterial({color:0xF0F8FF});       
+       for(i = 0; i < nsnow; i++) 
+       vsnow.push(makeCube(geomsn, matsn, (0.5-Math.random())*5, Math.random()*5-30, (0.5-Math.random())*5));
+       
+       vsnow.forEach((cube) => {
+       cube.rotation.x += 0.5-Math.random(); 
+       cube.rotation.y += 0.5-Math.random();
+       cube.rotation.z += 0.5-Math.random();
+       cube.position.y = -30;   
+       });
+       }                    
+       
+       const PlaySnow = function (v0, al, fi, x0, z0) {
+       g=9.8;
+       dr=1.0;
+       v0x=v0*Math.cos(al);
+       v0y=v0*Math.sin(al);		
+       
+       vsnow.forEach((cube) => {
+       r=Math.sqrt(Math.pow(cube.position.x-x0,2)+Math.pow(cube.position.z-z0,2))+dr*(0.5-Math.random())*5;
+       t=r/v0x;		
+       y=(v0y*t-0.5*g*t*t)*(1+Math.random())-31;			
+       e= (0.5-Math.random())*5*t;
+       
+       if (y<-31) {
+       x=x0; y=-31; z=z0; r=0;
+       }			
+       cube.position.x=r*Math.sin(fi)+e+x0;
+       cube.position.y=y;
+       cube.position.z=r*Math.cos(fi)-e + z0;				
+       });      
+       
+       }
+       
+       var OkBound = function (x,z) { 		
+         var Ok=1;   
+         if (z<-23 && x>-45 && x<65 && z>-185) Ok=0;
+         if (x>100) Ok=0;
+         if (x<-65) Ok=0;
+         if (z<-230) Ok=0;
+         if (z>160) Ok=0;
+         if (z>140 && x>70) Ok=0;
+         return Ok;
+       }
+       
+       const animate = function () { 		
+         controls.update();
+         requestAnimationFrame( animate );
+         
+         if (StartId) {
+ //groupsn        
+         if (spheresn4.position.y>-12) {
+         	ds=-0.025
+         }
+         if (spheresn4.position.y<-16) {
+         	ds=0.025
+         }
+         spheresn4.position.y+=ds;
+         spheresn5.position.y-=ds;
+         spheresn6.position.y-=ds;
+         spheresn7.position.y+=ds;
+         alpha = fun1();                   
+         groupsn.rotation.y+=alpha*0.02;                        
+         al = groupsn.rotation.y;
+        
+         dx=Math.sin(al)*0.2;
+         dz=Math.cos(al)*0.2;                               
+         groupsn.position.x+=dx;     
+         groupsn.position.z+=dz;                       
+         
+        if ( OkBound(groupsn.position.x+ 50*dx,
+            groupsn.position.z+ 50*dz)==0) {
+         groupsn.position.x-=dx;     
+         groupsn.position.z-=dz;                               
+        }
+        UpdateDrift(groupsn.position.x, 
+             groupsn.position.z);
+  // PlaySnow       
+         x=groupsn.position.x + 30*dx;
+         z=groupsn.position.z + 30*dz;
+         PlaySnow(30, Math.PI/4, Math.PI/4, x, z);                  
+         }
+         renderer.render( scene, camera );        											
+       }; 		
+               	      	      	     	      	      	     	      	     	      	      	
+     InitSnow();	
+     
+ //    camera.position.set(-34.04, -1.41, -109.50);
+//     camera.position.set(-22.9, 0, -113 );
+    camera.position.set(-24.26, 5.08, -112.82 );
+//    camera.position.set(-68, 29, 186 );
+//     camera.position.set(120, 6.3, -280.82 );
+     
+     
+     scene.background = new THREE.Color('lightblue');
+     //       scene.fog=new THREE.Fog( 0xffffff, 0.015, 400 );
+
+
+vdrift=[];         
+const InitDrift = function () {
+	const n = 100; n2=40,
+	nd=n*n2;
+    v=5;
+// 0xF0F8FF;
+    const geomsn = new THREE.BoxGeometry(v, 2*v, v);      
+    const matsn = new THREE.MeshPhongMaterial({emissive:colorsnow, emissiveIntensity:1});
+    for(i = 0; i < nd; i++) {    
+      z=i%n - 47;
+      x=Math.round((i-z)/n) - 17;
+      vdrift.push(makeCube(geomsn, matsn, x*v, -30, z*v));
+	}
+}                                 
+     
+     const UpdateDrift = function (x,z) { 		
+     v=5;
+     vdrift.forEach((cube) => {	
+       if (x>cube.position.x-v && x<cube.position.x+v
+          && z>cube.position.z-v && z<cube.position.z+v)
+       {
+         cube.position.y=-35;				      
+       }			
+     });      
+     }     
+         
+     InitDrift();
+	 btStart(); 
+//	 document.getElementById('r1').value='-1';                
+	       
+     animate();
+     </script>
+     
+   </body> 
+</html>
