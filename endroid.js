@@ -120,6 +120,6 @@ groupsn.add( mash );
 
 //groupsn.position.set(xs+20, -2.0, zs+50);
 //groupsn.position.set(83.7, -2.0, -162.2);
-groupsn.position.set(-9.33, -2.0, 1.0);
+groupsn.position.set(-2.26, -2.0, 28.0 );
 
 scene.add( groupsn );
