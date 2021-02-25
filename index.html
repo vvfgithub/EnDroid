@@ -30,6 +30,14 @@
 	 	value="▶️"
 	 	style="font-size : 50px; height: 70px;"       	 
 		>
+		<input type="range"  
+		min="-1" max="1" 
+		step="1" 
+		id="r1" 
+		value= "1"
+		oninput="fun1()"
+		style="font-size : 50px; width: 20px;"
+		>
 		
 		<input type="button"
 			 	id="Left"       	 
@@ -37,20 +45,18 @@
 			 	value="⬅️"
 			 	style="font-size : 50px; height: 70px;"       	 
 		>		
-     	<input type="range"  
-  		min="-1" max="1" 
-  		step="1" 
-  		id="r1" 
-  		value= "1"
-  		oninput="fun1()"
-  		style="font-size : 50px; width: 200px;"
-  		>
   		<input type="button"
-  		id="Left"       	 
-  		onclick="btRight()" 
-  		value="➡️"
+  		id="Forw"       	 
+  		onclick="btForw()" 
+  		value="⬆️"
   		style="font-size : 50px; height: 70px;"       	 
-  		>		  		  	
+  		>
+        <input type="button"
+        id="Left"       	 
+        onclick="btRight()" 
+        value="➡️"
+        style="font-size : 50px; height: 70px;"       	 
+        
     </div>
     
     <script> 	      
@@ -84,6 +90,9 @@
                                                               
        function btLeft() {
        	 document.getElementById('r1').value='-1';                                                       
+       }
+       function btForw() {
+       	 document.getElementById('r1').value='0';                                                       
        }
        
        function btRight() {
