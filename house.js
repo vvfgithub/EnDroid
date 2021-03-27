@@ -31,7 +31,7 @@ pointsv.push( new THREE.Vector3( am-dm, hm, cm ) );
 pointsv.push( new THREE.Vector3( am, 0, bm ) );
 
 	const geometryv = new THREE.BufferGeometry().setFromPoints( pointsv );	
-	const materialv = new THREE.MeshPhongMaterial({emissive:0xFFFAFA, emissiveIntensity:1, side: THREE.DoubleSide }); 
+	const materialv = new THREE.MeshBasicMaterial( {color: 0xFFFAFA, side: THREE.DoubleSide} ); 
 	
 	const meshv = new THREE.Mesh( geometryv, materialv ); 
 	meshv.position.set(-5.7*v, 3*v, -bm*0.5);
